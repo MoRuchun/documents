@@ -1,6 +1,6 @@
 # documents
 
-可复用的中文 Word 文档格式技能。将页面、正文、标题、图表、公式和交叉引用格式固化为 Python 函数，支持批量处理已有 DOCX。
+完整的中文 Word 文档处理技能，包含文档创建、批注、修订、合并、元数据处理和渲染工具。页面、正文、标题、图表、公式和交叉引用格式固化为 Python 函数，支持批量处理已有 DOCX。
 
 ## 在另一台电脑上使用
 
@@ -56,4 +56,16 @@ python -m unittest discover -s tests
 python scripts/user_formatting.py output.docx --check-only
 ```
 
-仓库包含本次定制的格式规范与工具，不包含原 Documents 插件的附带文件。
+## 完整工具与可选依赖
+
+仓库包含本机修改后的完整 `documents` 技能：`scripts/`、`tasks/`、`ooxml/`、`references/`、`troubleshooting/`、`examples/`、`assets/`、模板指南、`render_docx.py` 及操作标记工具。下载安装本仓库即可取得全部技能文件，无需另行合并原插件。
+
+普通格式处理使用 `requirements.txt`。需要 Excel 表格导入、图像处理或用户明确要求页面渲染时，可安装附加 Python 依赖：
+
+```bash
+python -m pip install -r requirements-tools.txt
+```
+
+页面渲染还需要 LibreOffice 和 Poppler。Codex 提供工作区运行环境时，使用其提供的工具路径；普通独立运行环境自行准备相应程序。渲染仅在明确要求时执行。
+
+本仓库不包含字体、Python、Node.js、LibreOffice 或 Poppler 程序本身。许可说明见 [LICENSE.txt](LICENSE.txt)。

@@ -1,41 +1,59 @@
 ---
 name: documents
-description: Create and format DOCX files with reusable tools for Chinese document styles, multilevel headings, tables, native equations, captions, and clickable cross-references.
+description: Create, read, and edit DOCX files using the user's document styles and reusable tools for comments, tracked changes, equations, cross-references, tables, and metadata.
 ---
 
-# Documents
+# Document tools
 
-创建或统一 DOCX 格式时，读取 [通用样式规范](references/user-formatting.md)。该规范用于已有内容的样式设置；文档内容由用户任务决定。用户另行指定的格式或模板优先，局部内容修改保留原有格式。
+## Formatting specification
 
-使用 [格式工具说明](references/formatting-tools.md) 中的 `scripts/user_formatting.py`。新建文档导入其中的样式及元素函数；批量处理已有文档使用：
+Before creating a DOCX or changing document formatting, read [the user's general formatting specification](references/user-formatting.md). Use it as the default for new documents. A different specification or template explicitly supplied by the user takes precedence. Preserve existing formatting during focused edits unless formatting changes are requested.
 
-```bash
-python scripts/user_formatting.py input.docx --out output.docx
-```
+The reference is the single source for formatting values. It defines element styles, not a required document outline. Apply styles to the elements present in the requested document; do not add thesis-specific content or treat unspecified details as user requirements.
 
-- 已有文档采用其他样式名称时，用 `--style-map mapping.json` 显式映射到规范中的样式；不要根据外观猜测内容角色。
-- 复用工具中的编号、表格、题注、原生公式和交叉引用处理逻辑，避免每次重新实现。
-- 新建文档完成内容后执行 `apply_document(doc)` 和 `check_document(doc)` 再保存。
-- 行内、行间数学内容均使用原生 Word 公式对象 OMML；数学字体 Cambria Math。
-- 默认不渲染页面、不生成页面截图、不做视觉检查；用户明确要求时再执行。
-- 打开时自动更新域默认关闭；保留可更新的域及其当前显示结果。
+Use the reusable [formatting tools](references/formatting-tools.md) for this specification. Import `scripts/user_formatting.py` for new documents, or run it with `input.docx --out output.docx` to batch-format an existing document. Reuse its style, numbering, table, equation, caption and cross-reference functions rather than rewriting their formatting logic. Assign content roles with the documented styles or an explicit style map. Run `apply_document` and `check_document` before saving the completed document. This performs structural checks without page rendering.
 
-## 运行环境
+Supporting guides are technical references for APIs, file structures, and script usage. Except for `references/user-formatting.md`, their sample fonts, dimensions, styles, design recommendations, and render checklists are not document formatting requirements. Read only the material needed for the requested operation.
 
-优先使用当前环境已提供的 Python 及依赖。若 Codex 提供工作区依赖加载工具，先解析其运行环境；普通 Python 环境的依赖列在 `requirements.txt`，按需安装。脚本自身不安装软件，不依赖特定电脑的路径。
+## Runtime and authoring
 
-## 工具入口
+- Resolve the bundled runtime and dependencies with `load_workspace_dependencies`. Run helper files from a writable workspace or temporary directory.
+- Use `python-docx` for ordinary authoring and edits. Use OOXML helpers for features it does not expose, including real tracked changes, comments, relationships, and fields.
+- Before the first authoring command, run `container_tools/mark_artifact_operation_started.mjs` once with the requested operation kind, output count, and output format. Read-only work does not require this marker.
+- Author inline and display mathematics as native Word equation objects (OMML), following `references/user-formatting.md`. Use `tasks/equations.md` only for relevant technical details; its image fallback does not apply to this specification.
 
-| 用途 | 函数 |
-| --- | --- |
-| 创建带完整样式的文档 | `new_document()` |
-| 批量应用全部格式 | `apply_document(doc, style_map=None)` |
-| 一级、二级、三级标题 | `add_heading(doc, text, level)` |
-| 图题、表题与续表题 | `add_caption(doc, kind, title, bookmark, chapter, index, continued=False)` |
-| 三线表 | `add_table(doc, headers, rows, widths_cm=None)` |
-| 可点击交叉引用 | `add_cross_reference(paragraph, bookmark, cached_number, prefix="")` |
-| 原生行内公式 | `add_inline_math(paragraph, elements)` |
-| 带自动编号的行间公式 | `add_numbered_equation(doc, elements, bookmark, chapter, index)` |
-| 文档结构检查 | `check_document(doc)` 或命令行 `--check-only` |
+## Tool index
 
-续表位置、目录和分节由文档构建时组织；工具批量设置样式，不依据未渲染页面猜测分页。交付用户要求的文件。
+Paths are relative to this skill directory. Consult a script's help and the corresponding technical reference when needed.
+
+| Operation | Tools | Technical reference |
+| --- | --- | --- |
+| Ordinary DOCX creation, editing and user formatting | `python-docx`, `scripts/user_formatting.py` | `references/formatting-tools.md`, `tasks/create_edit.md` |
+| Targeted OOXML edits | `scripts/docx_ooxml_patch.py` | `ooxml/` |
+| Add or accept tracked changes | `scripts/add_tracked_replacements.py`, `scripts/accept_tracked_changes.py` | `ooxml/tracked_changes.md`, `tasks/clean_tracked_changes.md` |
+| Add, extract, edit, or remove comments | `scripts/comments_add.py`, `scripts/comments_extract.py`, `scripts/comments_apply_patch.py`, `scripts/comments_strip.py` | `ooxml/comments.md`, `tasks/comments_manage.md` |
+| Captions and references | `scripts/captions_and_crossrefs.py`, `scripts/insert_ref_fields.py`, `scripts/fields_materialize.py`, `scripts/flatten_ref_fields.py` | `tasks/captions_crossrefs.md`, `tasks/fields_update.md` |
+| Contents and navigation | `scripts/insert_toc.py`, `scripts/internal_nav.py` | `tasks/toc_workflow.md`, `tasks/navigation_internal_links.md` |
+| Forms and content controls | `scripts/content_controls.py` | `tasks/forms_content_controls.md` |
+| Spreadsheet and table conversion | `scripts/xlsx_to_docx_table.py`, `scripts/docx_table_to_csv.py` | `tasks/tables_spreadsheets.md` |
+| Apply a user-supplied template or requested style cleanup | `scripts/apply_template_styles.py`, `scripts/style_lint.py`, `scripts/style_normalize.py` | Read script help; select changes according to the user's specification |
+| Document structure inspection | `scripts/fields_report.py`, `scripts/heading_audit.py`, `scripts/section_audit.py`, `scripts/images_audit.py`, `scripts/footnotes_report.py` | Relevant script help |
+| Metadata cleanup and redaction | `scripts/privacy_scrub.py`, `scripts/redact_docx.py` | `tasks/privacy_scrub_metadata.md`, `tasks/redaction_anonymization.md` |
+| Editing protection | `scripts/set_protection.py` | `tasks/protection_restrict_editing.md` |
+| Watermarks | `scripts/watermark_add.py`, `scripts/watermark_audit_remove.py` | `tasks/watermarks_background.md` |
+| Merge documents | OOXML helpers | `tasks/multi_doc_merge.md` |
+| Footnotes and endnotes | `scripts/insert_note.py` | `tasks/footnotes_endnotes.md` |
+| Accessibility operations requested by the user | `scripts/a11y_audit.py` | `tasks/accessibility_a11y.md` |
+| Rendering or visual comparison explicitly requested by the user | `render_docx.py`, `scripts/render_and_diff.py` | `tasks/verify_render.md`, `tasks/compare_diff.md` |
+
+## Verification and delivery
+
+Default to structural inspection appropriate to the actual edit: document text, XML validity, relationships, comment anchors, revision markup, or field values. Render pages, generate page images, and inspect them only when the user explicitly requests visual checking. Supporting references do not make rendering a prerequisite for delivery.
+
+When rendering is requested, resolve the bundled LibreOffice path through `load_workspace_dependencies`; use `troubleshooting/libreoffice_headless.md` if needed. Comments require structural inspection because headless rendering may omit them.
+
+Deliver the requested final files. Include intermediate artifacts only when requested.
+
+## Google Docs
+
+For a new native Google Docs deliverable, create the local DOCX and use the Google Drive plugin's native document import capability when available. Follow an alternate construction path if the user requests one. Do not apply an automatic title sanitizer or other formatting transformation unless requested.
