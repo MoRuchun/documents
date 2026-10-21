@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documents"
+  short_description: "Apply reusable DOCX styles and automatic numbering"
+  default_prompt: "Use $documents to create or format a Word document using the saved styles."
