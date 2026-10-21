@@ -39,6 +39,7 @@ scripts/images_audit.py
 scripts/insert_note.py
 scripts/insert_ref_fields.py
 scripts/insert_toc.py
+scripts/install_skill.py
 scripts/internal_nav.py
 scripts/make_fixtures.py
 scripts/merge_docx_append.py
@@ -83,6 +84,7 @@ tasks/watermarks_background.md
 template-create.md
 template-distill.md
 tests/test_formatting.py
+tests/test_installation.py
 troubleshooting/libreoffice_headless.md
 troubleshooting/run_splitting.md
 writing_quality.md

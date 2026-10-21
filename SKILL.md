@@ -17,9 +17,9 @@ Supporting guides are technical references for APIs, file structures, and script
 
 ## Runtime and authoring
 
-- Resolve the bundled runtime and dependencies with `load_workspace_dependencies`. Run helper files from a writable workspace or temporary directory.
+- When `load_workspace_dependencies` is available, resolve the bundled runtime and dependencies through it. Otherwise use the Python executable recorded in the local `install-state.json`, or an available Python environment with the required dependencies. Run helper files from a writable workspace or temporary directory.
 - Use `python-docx` for ordinary authoring and edits. Use OOXML helpers for features it does not expose, including real tracked changes, comments, relationships, and fields.
-- Before the first authoring command, run `container_tools/mark_artifact_operation_started.mjs` once with the requested operation kind, output count, and output format. Read-only work does not require this marker.
+- When the current Codex environment provides artifact-operation tracking, run `container_tools/mark_artifact_operation_started.mjs` once before the first authoring command, with the operation kind, output count and format. Standalone Python use does not require this runtime marker. Read-only work does not require it.
 - Author inline and display mathematics as native Word equation objects (OMML), following `references/user-formatting.md`. Use `tasks/equations.md` only for relevant technical details; its image fallback does not apply to this specification.
 
 ## Tool index
@@ -57,3 +57,7 @@ Deliver the requested final files. Include intermediate artifacts only when requ
 ## Google Docs
 
 For a new native Google Docs deliverable, create the local DOCX and use the Google Drive plugin's native document import capability when available. Follow an alternate construction path if the user requests one. Do not apply an automatic title sanitizer or other formatting transformation unless requested.
+
+## Installation and updates
+
+When the user requests installation, replacement or updating of this skill, follow [README.md](README.md) and run `scripts/install_skill.py`. Its `--update` mode downloads the latest repository version, backs up local copies and disables bundled duplicates. Reading the skill or authoring documents does not trigger installation.
