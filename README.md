@@ -108,6 +108,7 @@ python scripts/user_formatting.py input.docx --out output.docx --style-map mappi
 - 原生可编辑 Word 公式，Cambria Math；图表、公式按章编号。
 - 可点击交叉引用，全部引用文字统一为 #0000FF。
 - 参考文献左缩进 0，悬挂缩进 2 字符。
+- 正文文献引用采用可跳转的原生REF域，显示为#0000FF右上角上标`[1]`；文献表用SEQ域自动编号。复用`scripts/bibliography_fields.py`插入、关联及刷新引用。
 - 默认不添加页眉，不执行页面视觉检查，打开时不自动请求更新域。
 
 完整数值见 [通用样式规范](references/user-formatting.md)，函数用法见 [格式工具说明](references/formatting-tools.md)。字体名称按规范保存；本仓库不包含字体文件。

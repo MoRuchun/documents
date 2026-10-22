@@ -13,6 +13,7 @@ from docx.shared import Cm, Pt, RGBColor
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.text.paragraph import Paragraph
+from bibliography_fields import format_bibliography_fields, check_bibliography_fields
 
 NS = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
       'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math'}
@@ -346,7 +347,7 @@ def apply_document(doc,style_map=None):
         name=style_map.get(current,style_map.get(p.style.style_id,current))
         if name in PARAGRAPH_STYLES:apply_paragraph_style(p,doc,name,nid)
         else:set_child(pnode.get_or_add_pPr(),'w:snapToGrid',**{'w:val':0})
-    format_tables(doc,nid);format_cross_references(doc);format_math(doc)
+    format_tables(doc,nid);format_cross_references(doc);format_bibliography_fields(doc);format_math(doc)
     for sec in doc.sections:
         for footer in [sec.footer,sec.first_page_footer,sec.even_page_footer]:
             for p in footer.paragraphs:
@@ -504,9 +505,11 @@ def check_document(doc):
             if r.find(qn('w:t')) is not None:ref_run_count+=1
         if not re.search(r'\\\*\s+CHARFORMAT',code):errors.append('Cross-reference field lacks CHARFORMAT')
     if errors:raise ValueError('\n'.join(sorted(set(errors))))
+    bibliography_report=check_bibliography_fields(doc)
     return {'heading_numbers':labels,'table_paragraphs_single_spaced':len(table_ps),
             'cross_reference_text_runs_blue':ref_run_count,'reference_left_indent':0,
-            'reference_hanging_characters':2,'native_equations':len(list(root.iter(qn('m:oMath'))))}
+            'reference_hanging_characters':2,'native_equations':len(list(root.iter(qn('m:oMath')))),
+            **bibliography_report}
 
 
 def main():

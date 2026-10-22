@@ -21,6 +21,7 @@ scripts/a11y_audit.py
 scripts/accept_tracked_changes.py
 scripts/add_tracked_replacements.py
 scripts/apply_template_styles.py
+scripts/bibliography_fields.py
 scripts/captions_and_crossrefs.py
 scripts/comments_add.py
 scripts/comments_apply_patch.py
@@ -83,6 +84,7 @@ tasks/verify_render.md
 tasks/watermarks_background.md
 template-create.md
 template-distill.md
+tests/test_bibliography_fields.py
 tests/test_formatting.py
 tests/test_installation.py
 troubleshooting/libreoffice_headless.md

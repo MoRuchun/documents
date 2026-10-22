@@ -33,6 +33,7 @@ Paths are relative to this skill directory. Consult a script's help and the corr
 | Add or accept tracked changes | `scripts/add_tracked_replacements.py`, `scripts/accept_tracked_changes.py` | `ooxml/tracked_changes.md`, `tasks/clean_tracked_changes.md` |
 | Add, extract, edit, or remove comments | `scripts/comments_add.py`, `scripts/comments_extract.py`, `scripts/comments_apply_patch.py`, `scripts/comments_strip.py` | `ooxml/comments.md`, `tasks/comments_manage.md` |
 | Captions and references | `scripts/captions_and_crossrefs.py`, `scripts/insert_ref_fields.py`, `scripts/fields_materialize.py`, `scripts/flatten_ref_fields.py` | `tasks/captions_crossrefs.md`, `tasks/fields_update.md` |
+| Linked bibliography citations | `scripts/bibliography_fields.py` | `references/formatting-tools.md` (文献引用原生域) |
 | Contents and navigation | `scripts/insert_toc.py`, `scripts/internal_nav.py` | `tasks/toc_workflow.md`, `tasks/navigation_internal_links.md` |
 | Forms and content controls | `scripts/content_controls.py` | `tasks/forms_content_controls.md` |
 | Spreadsheet and table conversion | `scripts/xlsx_to_docx_table.py`, `scripts/docx_table_to_csv.py` | `tasks/tables_spreadsheets.md` |
